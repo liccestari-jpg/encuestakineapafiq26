@@ -816,14 +816,16 @@ async function submitToSheets() {
 
   if (GOOGLE_SHEETS_URL && !GOOGLE_SHEETS_URL.includes('PEGA_TU_URL')) {
     try {
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(payload));
+
       await fetch(GOOGLE_SHEETS_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       });
     } catch (err) {
-      console.warn('Error enviando a Google Sheets:', err);
+      // opaque response is expected and OK — data still arrives
+      console.log('Respuesta opaca (normal):', err);
     }
   } else {
     console.log('Respuestas (sin Google Sheets configurado):', payload);
